@@ -9,7 +9,7 @@ class AlienInvasion:
     def __init__(self):
         pygame.display.set_caption('Alien Invasion')
         self.settings=Settings()
-        self.bg_color = self.settings.bg_color
+        self.bg_image = self.settings.bg_image
         self.screen=pygame.display.set_mode((0,0),pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
@@ -51,7 +51,7 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                   self._check_keyup_events(event)
     def _update_screen(self):
-        self.screen.fill(self.bg_color)
+        self.  screen.blit(self.bg_image, (0, 0))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
