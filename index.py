@@ -3,6 +3,7 @@ import pygame
 from settings import  Settings
 from ship import Ship
 from bullet import  Bullet
+from alien import Alien
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -16,10 +17,18 @@ class AlienInvasion:
         self.clock = pygame.time.Clock()
         self.ship =Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self._create_fleet()
+
+    def _create_fleet(self):
+        alien = Alien(self)
+        self.aliens.add(alien)
+
     def _fire_bullet(self):
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+
     def _check_keydown_events(self,event):
             if event.key == pygame.K_RIGHT:
                 self.ship.moving_right = True
@@ -53,6 +62,7 @@ class AlienInvasion:
     def _update_screen(self):
         self.  screen.blit(self.bg_image, (0, 0))
         self.ship.blitme()
+        self.aliens.draw(self.screen)
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         pygame.display.flip()
