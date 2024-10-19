@@ -96,10 +96,8 @@ class AlienInvasion:
         """Update the positions of all aliens in the fleet."""
         self._check_fleet_edges()
         self.aliens.update()
-        if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            self.is_game_active=False
-        for bullet in self.bullets:
-            for alien in self.aliens:
+        for bullet in self.bullets.copy():
+            for alien in self.aliens.copy():
                 if alien.rect.colliderect(bullet.rect):
                     self.bullets.remove(bullet)
                     self.aliens.remove(alien)
@@ -121,10 +119,7 @@ class AlienInvasion:
                 break
 
     def _change_fleet_direction(self):
-        for alien in self.aliens.sprites():
-            alien.rect.x += self.settings.fleet_drop_speed
-            self.settings.fleet_direction *= -1
-
+        self.settings.fleet_direction *= -1
 
 
 
