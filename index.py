@@ -11,7 +11,7 @@ class AlienInvasion:
         pygame.display.set_caption('Alien Invasion')
         self.settings=Settings()
         self.bg_image = self.settings.bg_image
-        self.screen=pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+        self.screen=pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         self.clock = pygame.time.Clock()
@@ -19,6 +19,7 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
+        self.is_game_active=True
 
     def _fire_bullet(self):
         if len(self.bullets) < self.settings.bullets_allowed:
@@ -90,14 +91,18 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-                print(len(self.bullets))
 
     def _update_aliens(self):
         """Update the positions of all aliens in the fleet."""
         self._check_fleet_edges()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print("Ship hit!!!")
+            self.is_game_active=False
+        for bullet in self.bullets:
+            for alien in self.aliens:
+                if alien.rect.colliderect(bullet.rect):
+                    self.bullets.remove(bullet)
+                    self.aliens.remove(alien)
 
     def run_game(self):
         """Start the main Loop"""
@@ -106,6 +111,7 @@ class AlienInvasion:
             self.ship.update()
             self._update_screen()
             self.clock.tick(60)
+            self._update_bullets()
             self._update_aliens()
 
     def _check_fleet_edges(self):
